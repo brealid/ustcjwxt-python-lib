@@ -4,14 +4,15 @@ from ustcjwxt import log, request_info
 
 
 class StudentSession:
-    def __init__(self, username=None, password=None, session=None, fine_auth_token=None):
+    def __init__(self, username=None, password=None, session=None):
         self.request_session = requests.Session()
+        self.password_useable = False
         for key in request_info.base_cookie:
             self.request_session.cookies.set(key, request_info.base_cookie[key])
-        if session is not None and fine_auth_token is not None:
-            self.login_with_session(session, fine_auth_token)
-        elif session is not None or fine_auth_token is not None:
-            log.log_error('session 和 fine_auth_token 必须同时提供')
+        # login with session
+        if session is not None:
+            self.login_with_session(session)
+        # login with username and password
         if username is not None and password is not None:
             self.login_with_password(username, password)
         elif username is not None or password is not None:
@@ -25,17 +26,15 @@ class StudentSession:
         if response.url.startswith('https://jw.ustc.edu.cn/login'):
             log.log_warning(f'get {url} redirect to {response.url}')
             if self.password_useable:
-                log.log_warning('session 和 fine_auth_token 无效, 正在尝试重新用密码登录')
+                log.log_warning('session 无效, 正在尝试重新用密码登录')
                 self.clear_cookie()
                 if self.login_with_password(self.username, self.password):
                     response = self.request_session.get(url, headers=headers, params=params, data=data, **kwargs)
                 else:
                     log.log_error('密码登录失败')
-                    return None
             else:
-                log.log_error('session 和 fine_auth_token 无效')
+                log.log_error('session 无效')
                 self.clear_cookie()
-                return None
         return response
    
     def post(self, url, data=None, params=None, headers=request_info.header_uaonly, **kwargs) -> requests.Response:
@@ -43,17 +42,15 @@ class StudentSession:
         if response.url.startswith('https://jw.ustc.edu.cn/login'):
             log.log_warning(f'post {url} redirect to {response.url}')
             if self.password_useable:
-                log.log_warning('session 和 fine_auth_token 无效, 正在尝试重新用密码登录')
+                log.log_warning('session 无效, 正在尝试重新用密码登录')
                 self.clear_cookie()
                 if self.login_with_password(self.username, self.password):
                     response = self.request_session.post(url, headers=headers, params=params, data=data, **kwargs)
                 else:
                     log.log_error('密码登录失败')
-                    return None
             else:
-                log.log_error('session 和 fine_auth_token 无效')
+                log.log_error('session 无效')
                 self.clear_cookie()
-                return None
         return response
 
     def clear_cookie(self) -> None:
@@ -90,11 +87,10 @@ class StudentSession:
             self.clear_cookie()
             return False
 
-    def login_with_session(self, session: str, fine_auth_token: str) -> bool:
+    def login_with_session(self, session: str) -> bool:
         self.request_session.cookies['SESSION'] = session
-        self.request_session.cookies['fine_auth_token'] = fine_auth_token
         if not self.check_cookie_useable():
-            log.log_error('session 和 fine_auth_token 无效')
+            log.log_error('session 无效')
             self.clear_cookie()
             return False
         return True
