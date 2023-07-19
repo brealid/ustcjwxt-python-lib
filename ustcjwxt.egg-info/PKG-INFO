@@ -1,0 +1,29 @@
+Metadata-Version: 2.1
+Name: ustcjwxt
+Version: 0.0.1
+Summary: ustc jwxt api, for study only
+Home-page: https://github.com/brealid/ustcjwxt-python-lib
+Author: brealid
+Author-email: brealid@mail.ustc.edu.cn
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+# ustcjwxt-python-lib
+
+ustc jwxt api, for study only
+
+## Installation
+
+```bash
+pip install ustcjwxt
+```
+
+## Structure
+
+- ustcjwxt
+
+## Usage

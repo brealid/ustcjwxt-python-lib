@@ -1,0 +1,14 @@
+LICENSE
+README.md
+pyproject.toml
+setup.py
+ustcjwxt/__init__.py
+ustcjwxt/log.py
+ustcjwxt/request_info.py
+ustcjwxt/score.py
+ustcjwxt/session.py
+ustcjwxt.egg-info/PKG-INFO
+ustcjwxt.egg-info/SOURCES.txt
+ustcjwxt.egg-info/dependency_links.txt
+ustcjwxt.egg-info/requires.txt
+ustcjwxt.egg-info/top_level.txt
