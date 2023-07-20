@@ -119,7 +119,7 @@ def _send_addRequest(s: StudentSession, courseId: int) -> str:
         'virtualCost': '0',
     }
     response_request = s.post('https://jw.ustc.edu.cn/ws/for-std/course-select/add-request', data=requestData)
-    log.log_info(f'[+] 获得服务器返回信息: 唯一请求 id {response_request.text}')
+    log.log_info(f'[+] 获得服务器返回信息: 【请求唯一 UUID】 {response_request.text}')
     return response_request.text
 
 def _send_dropRequest(s: StudentSession, courseId: int) -> str:
@@ -131,7 +131,7 @@ def _send_dropRequest(s: StudentSession, courseId: int) -> str:
         'courseSelectTurnAssoc': _get_currentTurn(s),
     }
     response_request = s.post('https://jw.ustc.edu.cn/ws/for-std/course-select/drop-request', data=requestData)
-    log.log_info(f'[+] 获得服务器返回信息: 唯一请求 id {response_request.text}')
+    log.log_info(f'[+] 获得服务器返回信息: 【请求唯一 UUID】 {response_request.text}')
     return response_request.text
 
 def _query_opertaionResponse(s: StudentSession, requestID: str) -> dict:
@@ -140,6 +140,7 @@ def _query_opertaionResponse(s: StudentSession, requestID: str) -> dict:
         'requestId': requestID,
     }
     response_request = s.post('https://jw.ustc.edu.cn/ws/for-std/course-select/add-drop-response', data=requestData)
+    log.log_info(f'[+] 获得服务器返回信息: {response_request.json()}')
     return response_request.json()
 
 # user interface
@@ -171,6 +172,12 @@ def drop_Lesson(s: StudentSession, courseCode: str) -> str:
     if len(uuid) == 36:
         return _query_opertaionResponse(s, uuid)
     return { 'success': False, 'errorMessage': { 'textZh': uuid } }
+
+def load_cache(s: StudentSession) -> None:
+    _get_openTurns(s)
+    _get_allLesson(s)
+    _get_selectedLesson(s)
+    _get_currentTurn(s)
 
 get_openTurns = _get_openTurns
 get_allLesson = _get_allLesson

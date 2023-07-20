@@ -14,11 +14,13 @@ pip install ustcjwxt
   实现了一个简单的日志系统
 - request_info  
   记录了一些 requests 需要使用的信息
+- session  
+  可以登录到教务系统，并提供 StudentSession 类，用于存储登录信息
 - score  
   可以获取学生的成绩  
   当前功能: 获取成绩列表，计算 GPA / 加权平均分 / 算术平均分
-- session
-  可以登录到教务系统，并提供 StudentSession 类，用于存储登录信息
+- course_select  
+  可以进行选课 / 退课操作  
 
 ## Usage
 
@@ -74,4 +76,26 @@ if check_courseAvailable(s, 'IS4001.01'):
         print(f'课程未选中 (报错信息：{result["errorMessage"]["textZh"]})')
 else:
     print('课程不可选 (人员已满)')
+```
+
+课程交易
+```python
+import sys, time
+from ustcjwxt.session import StudentSession
+from ustcjwxt.course_select import *
+
+courseCode = 'IS4001.01'
+s_give = StudentSession()
+s_give.login_with_password('PB********', '********')
+s_get = StudentSession()
+s_get.login_with_password('PB********', '********')
+
+# 预加载数据，减小延迟
+load_cache(s_give)
+load_cache(s_get)
+
+time.sleep(1)
+
+drop_Lesson(s_give, courseCode)
+add_Lesson(s_get, courseCode)
 ```

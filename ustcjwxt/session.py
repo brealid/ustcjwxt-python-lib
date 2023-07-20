@@ -129,6 +129,29 @@ class StudentSession:
         self.cache['profile_info'] = stuinfo
         return stuinfo
     
+    def get_student_ID(self, force_retrieve = False) -> str:
+        if not force_retrieve and 'student_ID' in self.cache:
+            return self.cache['student_ID']
+        # 从课表页面获取学号
+        courseTablePage = self.get(f'https://jw.ustc.edu.cn/for-std/course-table/info/{self.get_student_assocID()}').text
+        p = courseTablePage.find('<h2 class="info-title">')
+        if p != -1:
+            log.log_debug('从课表页面成功获取学号')
+            student_ID = courseTablePage[p:].split('(')[1].split(')')[0]
+            self.cache['student_ID'] = student_ID
+            return student_ID
+        log.log_warning('未能在课表页面找到学号')
+        # 从 cookie 中获得学号
+        if 'uc' in self.request_session.cookies:
+            log.log_debug('从 cookies 中成功获取学号')
+            student_ID = self.request_session.cookies['uc']
+            self.cache['student_ID'] = student_ID
+            return student_ID
+        log.log_warning('未能在 cookies 中找到学号')
+        # 均失败
+        log.log_warning('未能获得学号')
+        return ''
+    
     def get_student_assocID(self, force_retrieve = False) -> int:
         if not force_retrieve and 'assocID' in self.cache:
             return self.cache['assocID']
