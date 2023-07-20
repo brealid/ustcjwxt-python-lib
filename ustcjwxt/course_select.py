@@ -1,3 +1,4 @@
+import time
 from typing import Iterable
 from ustcjwxt import log
 from ustcjwxt.session import StudentSession
@@ -159,17 +160,19 @@ def check_courseAvailable(s: StudentSession, courseCode: str) -> dict:
     course = get_lesson_byCode(s, courseCode)
     return _get_chooseCount(s, course['id']) < course['limitCount']
 
-def add_Lesson(s: StudentSession, courseCode: str) -> str:
+def add_Lesson(s: StudentSession, courseCode: str, delay_ms: float = 0.1) -> str:
     courseId = get_lesson_byCode(s, courseCode)['id']
     uuid = _send_addRequest(s, courseId)
     if len(uuid) == 36:
+        time.sleep(delay_ms / 1000)
         return _query_opertaionResponse(s, uuid)
     return { 'success': False, 'errorMessage': { 'textZh': uuid } }
 
-def drop_Lesson(s: StudentSession, courseCode: str) -> str:
+def drop_Lesson(s: StudentSession, courseCode: str, delay_ms: float = 0.1) -> str:
     courseId = get_lesson_byCode(s, courseCode)['id']
     uuid = _send_dropRequest(s, courseId)
     if len(uuid) == 36:
+        time.sleep(delay_ms / 1000)
         return _query_opertaionResponse(s, uuid)
     return { 'success': False, 'errorMessage': { 'textZh': uuid } }
 
