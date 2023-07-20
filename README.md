@@ -37,8 +37,8 @@ print(s.get_cookies())
 
 # get basic info
 print(s.get_student_info())
-with open('avator.jpg', 'wb') as f:
-    f.write(s.get_student_avator())
+with open('avatar.jpg', 'wb') as f:
+    f.write(s.get_student_avatar())
 
 # get score
 gradeList = get_gradeList_all(s)

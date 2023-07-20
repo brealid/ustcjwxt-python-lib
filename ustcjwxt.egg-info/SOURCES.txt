@@ -3,6 +3,7 @@ README.md
 pyproject.toml
 setup.py
 ustcjwxt/__init__.py
+ustcjwxt/course_select.py
 ustcjwxt/log.py
 ustcjwxt/request_info.py
 ustcjwxt/score.py
