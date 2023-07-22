@@ -110,6 +110,6 @@ load_cache(s_get)
 
 time.sleep(1)
 
-drop_Lesson(s_give, courseCode)
-add_Lesson(s_get, courseCode)
+drop_Lesson(s_give, courseCode, delay_ms=0)
+add_Lesson(s_get, courseCode, delay_ms=0)
 ```

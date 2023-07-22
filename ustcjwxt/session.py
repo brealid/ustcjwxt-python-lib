@@ -1,3 +1,4 @@
+import time
 import requests
 import requests.cookies
 from ustcjwxt import log, request_info
@@ -85,6 +86,7 @@ class StudentSession:
         log.log_debug(f'login response status code {response.status_code}')
         if response.url == 'https://jw.ustc.edu.cn/home' and self.check_cookie_useable():
             self.password_useable = True
+            time.sleep(1) # 应等待教务系统缓存更新
             return True
         else:
             log.log_error('username 和 password 无效, 登陆失败')

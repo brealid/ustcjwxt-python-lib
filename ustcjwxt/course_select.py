@@ -182,6 +182,9 @@ def load_cache(s: StudentSession) -> None:
     _get_selectedLesson(s)
     _get_currentTurn(s)
 
+send_addRequest = _send_addRequest
+send_dropRequest = _send_dropRequest
+query_opertaionResponse = _query_opertaionResponse
 get_openTurns = _get_openTurns
 get_allLesson = _get_allLesson
 get_selectedLesson = _get_selectedLesson
