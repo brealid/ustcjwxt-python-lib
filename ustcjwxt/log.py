@@ -28,5 +28,5 @@ def log_error(msg):
     logger.error(msg)
 
 
-set_logger_file('/dev/console' if sys.platform == 'linux' else 'CON', mode='w')
+set_logger_file('/dev/stderr' if sys.platform == 'linux' else 'CON', mode='w')
 set_logger_format()
