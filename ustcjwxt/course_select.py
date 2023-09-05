@@ -69,7 +69,7 @@ def _get_selectedLesson(s: StudentSession, force_retrieve: bool = False) -> list
         lesson['teacher_cated'] = ','.join(cated)
     return cacheData.get(s).allLesson
 
-def _get_chooseCount(s: StudentSession, courseIdList: Iterable | int | str) -> dict:
+def _get_chooseCount(s: StudentSession, courseIdList) -> dict:
     isSingle = type(courseIdList) in (int, str)
     try:
         courseIdList = [courseIdList] if type(courseIdList) in (int, str) else list(courseIdList)
@@ -150,7 +150,7 @@ def _query_opertaionResponse(s: StudentSession, requestID: str) -> dict:
 def set_currentTurn(s: StudentSession, turnID: int) -> None:
     cacheData.get(s).currentTrun = turnID
 
-def get_chooseCount(s: StudentSession, courseCodeList: Iterable[str] | str) -> dict:
+def get_chooseCount(s: StudentSession, courseCodeList) -> dict:
     if type(courseCodeList) is str:
         return _get_chooseCount(s, get_lesson_byCode(courseCodeList)['id'])
     courseIdList = [get_lesson_byCode(courseCode)['id'] for courseCode in courseCodeList]

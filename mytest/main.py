@@ -7,7 +7,7 @@ if len(sys.argv) == 4 and sys.argv[3] in ['rebuild', 'build-only']:
     os.chdir('..')
     os.system('python -m build')
     os.chdir('dist')
-    os.system('pip install ustcjwxt-0.0.3.dev0-py3-none-any.whl --force-reinstall --no-deps')
+    os.system('pip install ustcjwxt-0.0.3-py3-none-any.whl --force-reinstall --no-deps')
     print('========================================')
     print('        build and install done          ')
     print('========================================')

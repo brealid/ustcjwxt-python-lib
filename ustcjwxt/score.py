@@ -34,7 +34,7 @@ def jwxtApi_getGradeSheetTypes(s: session.StudentSession) -> list:
     response_gradeSheetTypes = s.get('https://jw.ustc.edu.cn/for-std/grade/sheet/getGradeSheetTypes').json()
     return response_gradeSheetTypes
 
-def jwxtApi_getGradeList(s: session.StudentSession, trainTypeId: int = -1, semesterIds: list | str = 'default') -> list:
+def jwxtApi_getGradeList(s: session.StudentSession, trainTypeId: int = -1, semesterIds = 'default') -> list:
     if semesterIds == 'default':
         semesterIds = [semester['id'] for semester in jwxtApi_getSemesters(s)]
     if type(semesterIds) == list:
@@ -49,15 +49,15 @@ def jwxtApi_getGradeList(s: session.StudentSession, trainTypeId: int = -1, semes
 #### user interface
 
 # 所有成绩
-def get_gradeList_all(s: session.StudentSession, semesterIds: list | str = 'default') -> list:
+def get_gradeList_all(s: session.StudentSession, semesterIds = 'default') -> list:
     return sum([x['scores'] for x in jwxtApi_getGradeList(s, -1, semesterIds)['semesters']], [])
 
 # 主修成绩
-def get_gradeList_major(s: session.StudentSession, semesterIds: list | str = 'default') -> list:
+def get_gradeList_major(s: session.StudentSession, semesterIds = 'default') -> list:
     return sum([x['scores'] for x in jwxtApi_getGradeList(s, 1, semesterIds)['semesters']], [])
 
 # 辅修成绩
-def get_gradeList_minor(s: session.StudentSession, semesterIds: list | str = 'default') -> list:
+def get_gradeList_minor(s: session.StudentSession, semesterIds = 'default') -> list:
     return sum([x['scores'] for x in jwxtApi_getGradeList(s, 2, semesterIds)['semesters']], [])
 
 # 修读课程总数

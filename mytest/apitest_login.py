@@ -2,7 +2,7 @@ import requests
 
 s = requests.Session()
 response = s.get('https://passport.ustc.edu.cn/login?service=https%3A%2F%2Fjw.ustc.edu.cn%2Fucas-sso%2Flogin')
-cas_lt = response.text.split('name="CAS_LT" value="')[-1].split('">')[0]
+cas_lt = response.text.split('$("#CAS_LT").val("')[-1].split('");')[0]
 print(cas_lt)
 
 username = ''

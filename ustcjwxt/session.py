@@ -72,7 +72,15 @@ class StudentSession:
             'service': 'https://jw.ustc.edu.cn/ucas-sso/login',
         }
         response = self.get('https://passport.ustc.edu.cn/login', params=loginParams)
-        cas_lt = response.text.split('name="CAS_LT" value="')[-1].split('">')[0]
+
+        # 自 2023.9 之后，教务系统经历了一次更新
+        # CAS_LT 从网页静态写入，变为动态写入
+        # 因此提取方式发生改变，但仍是同一个网页
+        # 下方语句不再生效
+        # cas_lt = response.text.split('name="CAS_LT" value="')[-1].split('">')[0]
+        # 正确做法如下
+        cas_lt = response.text.split('$("#CAS_LT").val("')[-1].split('");')[0]
+        
         loginForm = {
             'model': 'uplogin.jsp',
             'CAS_LT': cas_lt,
