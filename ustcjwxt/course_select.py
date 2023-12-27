@@ -61,13 +61,13 @@ def _get_selectedLesson(s: StudentSession, force_retrieve: bool = False) -> list
     url = 'https://jw.ustc.edu.cn/ws/for-std/course-select/selected-lessons'
     formData = { 'turnId': _get_currentTurn(s), 'studentId': s.get_student_assocID() }
     response = s.post(url, data=formData)
-    cacheData.get(s).allLesson = response.json()
-    for lesson in cacheData.get(s).allLesson:
+    cacheData.get(s).selectedLesson = response.json()
+    for lesson in cacheData.get(s).selectedLesson:
         cated = []
         for teacher in lesson['teachers']:
             cated.append(teacher['nameZh'])
         lesson['teacher_cated'] = ','.join(cated)
-    return cacheData.get(s).allLesson
+    return cacheData.get(s).selectedLesson
 
 def _get_chooseCount(s: StudentSession, courseIdList) -> dict:
     isSingle = type(courseIdList) in (int, str)
