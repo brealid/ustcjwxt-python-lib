@@ -55,7 +55,7 @@ def _get_allLesson(s: StudentSession, force_retrieve: bool = False) -> list:
         lesson['teacher_cated'] = ','.join(cated)
     return cacheData.get(s).allLesson
 
-def _get_selectedLesson(s: StudentSession, force_retrieve: bool = False) -> list:
+def _get_selectedLesson(s: StudentSession, force_retrieve: bool = True) -> list:
     if not force_retrieve and cacheData.get(s).selectedLesson is not None:
         return cacheData.get(s).selectedLesson
     url = 'https://jw.ustc.edu.cn/ws/for-std/course-select/selected-lessons'
