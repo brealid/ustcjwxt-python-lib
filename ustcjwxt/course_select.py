@@ -152,8 +152,8 @@ def set_currentTurn(s: StudentSession, turnID: int) -> None:
 
 def get_chooseCount(s: StudentSession, courseCodeList) -> dict:
     if type(courseCodeList) is str:
-        return _get_chooseCount(s, get_lesson_byCode(courseCodeList)['id'])
-    courseIdList = [get_lesson_byCode(courseCode)['id'] for courseCode in courseCodeList]
+        return _get_chooseCount(s, get_lesson_byCode(s, courseCodeList)['id'])
+    courseIdList = [get_lesson_byCode(s, courseCode)['id'] for courseCode in courseCodeList]
     return _get_chooseCount(s, courseIdList)
 
 def check_courseAvailable(s: StudentSession, courseCode: str) -> dict:
