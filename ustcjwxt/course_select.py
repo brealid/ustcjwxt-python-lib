@@ -72,7 +72,7 @@ def _get_selectedLesson(s: StudentSession, force_retrieve: bool = False) -> list
 def _get_chooseCount(s: StudentSession, courseIdList) -> dict:
     isSingle = type(courseIdList) in (int, str)
     try:
-        courseIdList = [courseIdList] if type(courseIdList) in (int, str) else list(courseIdList)
+        courseIdList = [courseIdList] if isSingle else list(courseIdList)
     except TypeError:
         log.log_error(f'所提供的的 courseIdList 无法转为 list')
     url_fetch = 'https://jw.ustc.edu.cn/ws/for-std/course-select/std-count'
@@ -176,10 +176,10 @@ def drop_Lesson(s: StudentSession, courseCode: str, delay_ms: float = 0.1) -> st
         return _query_opertaionResponse(s, uuid)
     return { 'success': False, 'errorMessage': { 'textZh': uuid } }
 
-def load_cache(s: StudentSession) -> None:
-    _get_openTurns(s)
-    _get_allLesson(s)
-    _get_selectedLesson(s)
+def load_cache(s: StudentSession, force_retrieve: bool = True) -> None:
+    _get_openTurns(s, force_retrieve)
+    _get_allLesson(s, force_retrieve)
+    _get_selectedLesson(s, force_retrieve)
     _get_currentTurn(s)
 
 send_addRequest = _send_addRequest
