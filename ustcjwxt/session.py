@@ -10,6 +10,7 @@ class StudentSession:
         self.request_session = requests.Session()
         self.password_useable = False
         self.cache = dict()
+        self.smcode_hook = None
         for key in request_info.base_cookie:
             self.request_session.cookies.set(key, request_info.base_cookie[key])
         # login with session
@@ -68,6 +69,10 @@ class StudentSession:
         self.clear_cache()
         self.username = username
         self.password = password
+        if smcode_hook is None:
+            smcode_hook = self.smcode_hook
+        else:
+            self.smcode_hook = smcode_hook
         fingerprint = hashlib.sha256(b'ustcjwxt-lib-' + username.encode()).hexdigest()[:64]
 
         loginParams = {
