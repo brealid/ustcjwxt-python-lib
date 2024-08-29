@@ -7,7 +7,7 @@ if len(sys.argv) == 4 and sys.argv[3] in ['rebuild', 'build-only']:
     os.chdir('..')
     os.system('python -m build')
     os.chdir('dist')
-    os.system('pip install ustcjwxt-0.0.3-py3-none-any.whl --force-reinstall --no-deps')
+    os.system('pip install ustcjwxt-0.0.5-py3-none-any.whl --force-reinstall --no-deps')
     print('========================================')
     print('        build and install done          ')
     print('========================================')
@@ -31,7 +31,7 @@ def test_stuInfo():
         f.write(s.get_student_avatar())
 
 def test_scoreCalc():
-    gradeList = get_gradeList_all(s)
+    gradeList = get_gradeList_major(s)
     print(grade_calcGpa(gradeList))
     # print([grade['score'] for grade in gradeList if grade['gp'] is not None])
     print(grade_calcWeightedScore(gradeList))
@@ -39,8 +39,8 @@ def test_scoreCalc():
 
 
 s = StudentSession()
-s.login_with_password(sys.argv[1], sys.argv[2])
+s.login_with_password(sys.argv[1], sys.argv[2], smcode_hook=lambda: input('[+] 输入验证码: '))
 
 print(s.get_cookies())
 test_stuInfo()
-# test_scoreCalc()
+test_scoreCalc()

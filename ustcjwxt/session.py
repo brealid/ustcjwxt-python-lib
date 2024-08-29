@@ -1,6 +1,7 @@
 import time
 import requests
 import requests.cookies
+import hashlib
 from ustcjwxt import log, request_info
 
 
@@ -63,10 +64,11 @@ class StudentSession:
             self.request_session.cookies.set(key, request_info.base_cookie[key])
         self.cache = dict()
 
-    def login_with_password(self, username: str, password: str) -> bool:
+    def login_with_password(self, username: str, password: str, smcode_hook = None) -> bool:
         self.clear_cache()
         self.username = username
         self.password = password
+        fingerprint = hashlib.sha256(b'ustcjwxt-lib-' + username.encode()).hexdigest()[:64]
 
         loginParams = {
             'service': 'https://jw.ustc.edu.cn/ucas-sso/login',
@@ -88,10 +90,48 @@ class StudentSession:
             'showCode': '',
             'username': username,
             'password': password,
+            'resultInput': fingerprint,
         }
         response = self.post('https://passport.ustc.edu.cn/login', params=loginParams, data=loginForm)
         log.log_debug(f'login redirect to {response.url}')
         log.log_debug(f'login response status code {response.status_code}')
+        if response.url.startswith('https://passport.ustc.edu.cn/login'):
+            # 检测二步验证相关设置
+            msg = response.text.split('var msg = "')[-1].split('";')[0]
+            log.log_debug(f'{msg = }')
+            if msg == '4003' or msg == '4002':
+                log.log_info('需要二步验证')
+                if smcode_hook is None:
+                    log.log_error('无法获取验证码, 登录失败')
+                    log.log_error('suggest: 请传入 smcode_hook 以获取验证码')
+                    return False
+                # 获取验证码
+                log.log_info('正在发送验证码')
+                params = {
+                    'type': {'4002': 1, '4003': 2}[msg],
+                    'mobile': response.text.split('var mobile = "')[-1].split('";')[0],
+                    'code_mobile': response.text.split('var code_mobile = "')[-1].split('";')[0],
+                    'trust': response.text.split('var trust=\'')[-1].split('\';')[0],
+                    'secondCode': response.text.split('var secondCode=\'')[-1].split('\';')[0],
+                    'isWx': response.text.split('var isWx=\'')[-1].split('\';')[0],
+                }
+                if msg == '4003':
+                    params['time'] = 60
+                response = self.get('https://passport.ustc.edu.cn/loginSm.jsp', params=params)
+                log.log_info('等待 hook 函数回传验证码')
+                smCode = smcode_hook()
+                response = self.post('https://passport.ustc.edu.cn/loginValidateSm', data={
+                    'code_mobile': params['code_mobile'],
+                    'smCode': smCode,
+                    'trust': 'trust_checkbox',
+                    'fingerprint': fingerprint,
+                    'service': 'https://jw.ustc.edu.cn/ucas-sso/login',
+                    'secondCode': params['secondCode'],
+                })
+                response = self.post('https://passport.ustc.edu.cn/login', data={
+                    'secondCode': params['secondCode'],
+                    'second': '2',
+                })
         if response.url == 'https://jw.ustc.edu.cn/home' and self.check_cookie_useable():
             self.password_useable = True
             time.sleep(1) # 应等待教务系统缓存更新
