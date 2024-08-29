@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: ustcjwxt
-Version: 0.0.3
+Version: 0.0.5
 Summary: ustc jwxt api, for study only
 Home-page: https://github.com/brealid/ustcjwxt-python-lib
 Author: brealid
@@ -11,6 +11,7 @@ Classifier: Operating System :: OS Independent
 Requires-Python: >=3.6
 Description-Content-Type: text/markdown
 License-File: LICENSE
+Requires-Dist: requests
 
 # ustcjwxt-python-lib
 
