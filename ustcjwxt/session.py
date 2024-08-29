@@ -6,11 +6,11 @@ from ustcjwxt import log, request_info
 
 
 class StudentSession:
-    def __init__(self, username=None, password=None, session=None):
+    def __init__(self, username=None, password=None, session=None, smcode_hook=None):
         self.request_session = requests.Session()
         self.password_useable = False
         self.cache = dict()
-        self.smcode_hook = None
+        self.smcode_hook = smcode_hook
         for key in request_info.base_cookie:
             self.request_session.cookies.set(key, request_info.base_cookie[key])
         # login with session
@@ -65,7 +65,7 @@ class StudentSession:
             self.request_session.cookies.set(key, request_info.base_cookie[key])
         self.cache = dict()
 
-    def login_with_password(self, username: str, password: str, smcode_hook = None) -> bool:
+    def login_with_password(self, username: str, password: str, smcode_hook=None) -> bool:
         self.clear_cache()
         self.username = username
         self.password = password
