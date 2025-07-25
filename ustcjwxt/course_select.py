@@ -37,16 +37,16 @@ def _get_openTurns(s: StudentSession, force_retrieve: bool = False) -> list:
         return cacheData.get(s).openTurns
     
     student_ID = s.get_student_ID()
-    if student_ID.startswith('PB'):
-        log.log_info('学生类型: 本科生 (bizTypeId: 2)')
-        bizTypeId = 2
-    elif student_ID.startswith('SA'):
+    if student_ID.startswith('SA'):
         log.log_info('学生类型: 研究生 (bizTypeId: 3)')
         bizTypeId = 3
+    elif student_ID.startswith('PB'):
+        log.log_info('学生类型: 本科生 (bizTypeId: 2)')
+        bizTypeId = 2
     else:
-        log.log_info('学生类型: 未知 (bizTypeId: -1)')
-        log.log_error('请联系开发者获取进一步信息')
-        bizTypeId = 1
+        log.log_info('学生类型: 未知 (bizTypeId: 2)')
+        log.log_error('如果无法正常获取选课列表, 请联系开发者获取进一步信息')
+        bizTypeId = 2
     
     url = 'https://jw.ustc.edu.cn/ws/for-std/course-select/open-turns'    
     formData = { 'bizTypeId': bizTypeId, 'studentId': s.get_student_assocID() }
