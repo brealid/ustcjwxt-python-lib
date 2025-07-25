@@ -66,6 +66,9 @@ class StudentSession:
         self.cache = dict()
 
     def login_with_password(self, username: str, password: str, smcode_hook=None) -> bool:
+        log.log_error('当前使用账号密码登录的功能暂不可用! 请使用 login_with_session')
+        return False
+        
         self.clear_cache()
         self.username = username
         self.password = password
@@ -202,6 +205,17 @@ class StudentSession:
             student_ID = self.request_session.cookies['uc']
             self.cache['student_ID'] = student_ID
             return student_ID
+        log.log_warning('未能在 cookies 中找到学号')
+        # 从选课界面中获得学号
+        response = self.get('https://jw.ustc.edu.cn/for-std/course-select')
+        if response.url.startswith('https://jw.ustc.edu.cn/for-std/course-select/turns/'):
+            p = response.text.find('<span class="pull-left"><strong>学号</strong></span>')
+            if p != -1:
+                p = response.text.find('<span>', p + 50) + 6
+                q = response.text.find('</span>', p)
+                student_ID = response.text[p:q]
+                self.cache['student_ID'] = student_ID
+                return student_ID
         log.log_warning('未能在 cookies 中找到学号')
         # 均失败
         log.log_warning('未能获得学号')

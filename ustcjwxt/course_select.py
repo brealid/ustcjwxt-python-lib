@@ -35,8 +35,21 @@ cacheData = CacheDataInfo()
 def _get_openTurns(s: StudentSession, force_retrieve: bool = False) -> list:
     if not force_retrieve and cacheData.get(s).openTurns is not None:
         return cacheData.get(s).openTurns
-    url = 'https://jw.ustc.edu.cn/ws/for-std/course-select/open-turns'
-    formData = { 'bizTypeId': 2, 'studentId': s.get_student_assocID() }
+    
+    student_ID = s.get_student_ID()
+    if student_ID.startswith('PB'):
+        log.log_info('学生类型: 本科生 (bizTypeId: 2)')
+        bizTypeId = 2
+    elif student_ID.startswith('SA'):
+        log.log_info('学生类型: 研究生 (bizTypeId: 3)')
+        bizTypeId = 3
+    else:
+        log.log_info('学生类型: 未知 (bizTypeId: -1)')
+        log.log_error('请联系开发者获取进一步信息')
+        bizTypeId = 1
+    
+    url = 'https://jw.ustc.edu.cn/ws/for-std/course-select/open-turns'    
+    formData = { 'bizTypeId': bizTypeId, 'studentId': s.get_student_assocID() }
     response = s.post(url, data=formData)
     cacheData.get(s).openTurns = response.json()
     return cacheData.get(s).openTurns
