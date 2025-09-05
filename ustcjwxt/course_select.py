@@ -180,7 +180,7 @@ def add_Lesson(s: StudentSession, courseCode: str, delay_ms: float = 1000) -> st
     courseId = get_lesson_byCode(s, courseCode)['id']
     uuid = _send_addRequest(s, courseId)
     if len(uuid) == 36:
-        for _ in range(8):
+        for _ in log.progress_info(range(8), '正在获取选课结果'):
             time.sleep(delay_ms / 1000)
             ret = _query_opertaionResponse(s, uuid)
             if ret != None:
@@ -191,7 +191,7 @@ def drop_Lesson(s: StudentSession, courseCode: str, delay_ms: float = 1000) -> s
     courseId = get_lesson_byCode(s, courseCode)['id']
     uuid = _send_dropRequest(s, courseId)
     if len(uuid) == 36:
-        for _ in range(8):
+        for _ in log.progress_info(range(8), '正在获取选课结果'):
             time.sleep(delay_ms / 1000)
             ret = _query_opertaionResponse(s, uuid)
             if ret != None:

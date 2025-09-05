@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="ustcjwxt",
-    version="v0.0.9",
+    version="v0.1.0",
     author="brealid",
     author_email="brealid@mail.ustc.edu.cn",
     description="ustc jwxt api, for study only",
