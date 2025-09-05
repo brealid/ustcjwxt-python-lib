@@ -176,20 +176,26 @@ def check_courseAvailable(s: StudentSession, courseCode: str) -> dict:
     course = get_lesson_byCode(s, courseCode)
     return _get_chooseCount(s, course['id']) < course['limitCount']
 
-def add_Lesson(s: StudentSession, courseCode: str, delay_ms: float = 0.1) -> str:
+def add_Lesson(s: StudentSession, courseCode: str, delay_ms: float = 1000) -> str:
     courseId = get_lesson_byCode(s, courseCode)['id']
     uuid = _send_addRequest(s, courseId)
     if len(uuid) == 36:
-        time.sleep(delay_ms / 1000)
-        return _query_opertaionResponse(s, uuid)
+        for _ in range(8):
+            time.sleep(delay_ms / 1000)
+            ret = _query_opertaionResponse(s, uuid)
+            if ret != None:
+                return ret
     return { 'success': False, 'errorMessage': { 'textZh': uuid } }
 
-def drop_Lesson(s: StudentSession, courseCode: str, delay_ms: float = 0.1) -> str:
+def drop_Lesson(s: StudentSession, courseCode: str, delay_ms: float = 1000) -> str:
     courseId = get_lesson_byCode(s, courseCode)['id']
     uuid = _send_dropRequest(s, courseId)
     if len(uuid) == 36:
-        time.sleep(delay_ms / 1000)
-        return _query_opertaionResponse(s, uuid)
+        for _ in range(8):
+            time.sleep(delay_ms / 1000)
+            ret = _query_opertaionResponse(s, uuid)
+            if ret != None:
+                return ret
     return { 'success': False, 'errorMessage': { 'textZh': uuid } }
 
 def load_cache(s: StudentSession, force_retrieve: bool = True) -> None:
