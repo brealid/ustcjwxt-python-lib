@@ -180,22 +180,24 @@ def add_Lesson(s: StudentSession, courseCode: str, delay_ms: float = 1000) -> st
     courseId = get_lesson_byCode(s, courseCode)['id']
     uuid = _send_addRequest(s, courseId)
     if len(uuid) == 36:
+        time.sleep(delay_ms / 1000)
         for _ in log.progress_info(range(8), '正在获取选课结果'):
-            time.sleep(delay_ms / 1000)
             ret = _query_opertaionResponse(s, uuid)
             if ret != None:
                 return ret
+            time.sleep(0.8)
     return { 'success': False, 'errorMessage': { 'textZh': uuid } }
 
 def drop_Lesson(s: StudentSession, courseCode: str, delay_ms: float = 1000) -> str:
     courseId = get_lesson_byCode(s, courseCode)['id']
     uuid = _send_dropRequest(s, courseId)
     if len(uuid) == 36:
+        time.sleep(delay_ms / 1000)
         for _ in log.progress_info(range(8), '正在获取选课结果'):
-            time.sleep(delay_ms / 1000)
             ret = _query_opertaionResponse(s, uuid)
             if ret != None:
                 return ret
+            time.sleep(0.8)
     return { 'success': False, 'errorMessage': { 'textZh': uuid } }
 
 def load_cache(s: StudentSession, force_retrieve: bool = True) -> None:

@@ -50,7 +50,7 @@ class progress_info:
         try:
             val = next(self.it)
             self.cnt += 1
-            print(f'{strf_current_time()} [INFO] {self.info}{self.cnt * '.'}', file=sys.stderr, end='\r')
+            print(f'{strf_current_time()} [INFO] {self.info}{self.cnt * "."}', file=sys.stderr, end='\r')
             return val
         except StopIteration:
             raise StopIteration
