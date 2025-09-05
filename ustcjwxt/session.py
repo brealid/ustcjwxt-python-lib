@@ -200,7 +200,7 @@ class StudentSession:
                 student_ID = response.text[p:q]
                 self.cache['student_ID'] = student_ID
                 return student_ID
-        log.log_warning('未能在 cookies 中找到学号')
+        log.log_warning('未能在选课界面中找到学号')
         # 从课表页面获取学号
         courseTablePage = self.get(f'https://jw.ustc.edu.cn/for-std/course-table/info/{self.get_student_assocID()}').text
         p = courseTablePage.find('<h2 class="info-title">')

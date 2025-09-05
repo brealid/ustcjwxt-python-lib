@@ -37,10 +37,13 @@ def _get_openTurns(s: StudentSession, force_retrieve: bool = False) -> list:
         return cacheData.get(s).openTurns
     
     student_ID = s.get_student_ID()
-    if student_ID.startswith('SA'):
+    if student_ID[:2] in ['SA']:
         log.log_info('学生类型: 研究生 (bizTypeId: 3)')
         bizTypeId = 3
-    elif student_ID.startswith('PB'):
+    elif student_ID[:2] in ['BZ']:
+        log.log_info('学生类型: 博士生 (bizTypeId: 3)')
+        bizTypeId = 3
+    elif student_ID[:2] in ['PB']:
         log.log_info('学生类型: 本科生 (bizTypeId: 2)')
         bizTypeId = 2
     else:
